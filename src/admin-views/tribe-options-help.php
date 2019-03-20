@@ -49,6 +49,8 @@ $help->add_section_content(
 
 $help->add_section_content( 'system-info', '<div class="system-info-copy"><button data-clipboard-action="copy" class="system-info-copy-btn" data-clipboard-target=".support-stats" ><span class="dashicons dashicons-clipboard license-btn"></span>' .  __( 'Copy to clipboard', 'tribe-common' ) . '</button></div>', 10 );
 
+$help->add_section_content( 'system-info', '<div class="system-info-copy"><button id="sys-info-download" class="system-info-download-btn system-info-copy-btn" ><span class="dashicons dashicons-format-aside"></span>' .  __( 'Download System Info', 'tribe-common' ) . '</button></div>', 10 );
+
 $help->add_section( 'template-changes', __( 'Recent Template Changes', 'tribe-common' ), 40 );
 $help->add_section_content( 'template-changes', Tribe__Support__Template_Checker_Report::generate() );
 

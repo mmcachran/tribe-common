@@ -217,7 +217,7 @@ if ( ! class_exists( 'Tribe__Support' ) ) {
 		public function formattedSupportStats() {
 			$systeminfo = $this->getSupportStats();
 			$output     = '';
-			$output .= '<dl class="support-stats">';
+			$output .= '<dl id="support-sys-info" class="support-stats">';
 
 			foreach ( $systeminfo as $k => $v ) {
 
@@ -266,9 +266,9 @@ if ( ! class_exists( 'Tribe__Support' ) ) {
 					$v = join( "\n", $formatted_v );
 					$output .= sprintf( '<dd class="support-stats-object"><ul>%s</ul></dd>', print_r( $v, true ) );
 				}
-			}
+            }
 
-			$output .= '</dl>';
+            $output .= '</dl>';
 
 			return $output;
 		}
@@ -443,7 +443,9 @@ if ( ! class_exists( 'Tribe__Support' ) ) {
 			}
 
 			return self::$instance;
-		}
-	}
+        }
+
+
+    }
 
 }

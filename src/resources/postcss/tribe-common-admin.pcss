@@ -443,10 +443,83 @@ table.plugins .tribe-plugin-update-message a {
 	margin-left: 15px;
 }
 
-#tribe-help-general ul {
-	list-style-type: square;
-	margin-bottom: 20px;
-	margin-left: 35px;
+#tribe-support > ul {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+#tribe-support > ul li {
+    background: #F5F6F8;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin: 2%;
+    padding: 32px 16px 24px;
+    position: relative;
+    text-align: center;
+    width: calc(33.3333% - 4%);
+}
+
+#tribe-support ul li p {
+    margin: 0;
+    padding: 0;
+}
+
+#tribe-support ul li p a {
+    display: block;
+    font-size: 20px;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+#tribe-support ul li p a:before {
+    color: rgba(51, 51, 51, 0.5);
+    display: block;
+    font-family: 'dashicons';
+    font-size: 64px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease-in-out 0.03s;
+}
+
+/* Settings */
+a[href*="https://m.tri.be/18je"]:before {
+    content: "\f111";
+}
+
+/* Features*/
+a[href*="https://m.tri.be/18jc"]:before {
+    content: "\f508";
+}
+
+/* Themer's Guide */
+a[href*="https://m.tri.be/18jg"]:before {
+    content: "\f324";
+}
+
+/* Stylesheets */
+a[href*="https://m.tri.be/18jd"]:before {
+    content: "\f499";
+}
+
+/* Troubleshooting */
+a[href*="https://m.tri.be/18jb"]:before {
+    content: "\f473";
+}
+
+/* Customize */
+a[href*="https://m.tri.be/18ja"]:before {
+    content: "\f107";
+}
+
+#tribe-support ul li p a:hover:before {
+    color: rgba(51, 51, 51, 1);
+    transform: translateY(-3px);
+}
+
+#tribe-system-info .system-info-copy {
+    display: inline-block;
+    margin-right: 10px;
 }
 
 #tribe-help-general ol {

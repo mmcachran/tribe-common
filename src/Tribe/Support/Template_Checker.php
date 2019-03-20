@@ -28,6 +28,54 @@ class Tribe__Support__Template_Checker {
 
 		$this->scan_view_directory();
 		$this->scan_for_overrides();
+
+		add_filter( 'tribe-events-pro-support', tribe_callback( $this, 'maybe_add_templates_to_systeminfo' ) );
+	}
+
+
+	/**
+	 * Check if we need to add template issues
+	 * to the system information
+	 *
+	 * @since TBD
+	 *
+	 * @param array  $systeminfo
+	 * @return array $systeminfo
+	 */
+	function maybe_add_templates_to_systeminfo( $systeminfo ) {
+
+
+		$newly_introduced_or_updated = $this->get_views_tagged_this_release();
+		$outdated_or_unknown = $this->get_outdated_overrides( true );
+
+		if ( ! empty( $outdated_or_unknown ) ) {
+
+			$report = '<ul>';
+
+			foreach ( $outdated_or_unknown as $view_name => $version ) {
+				$version_note = empty( $version )
+					? __( 'version data missing from override', 'tribe-common' )
+					: sprintf( __( 'based on %s version', 'tribe-common' ), $version );
+
+				$current_version = $this->get_template_version( $this->plugin_views_dir . '/' . $view_name );
+
+				$override_folder = substr( $this->theme_views_dir, strpos( $this->theme_views_dir, 'themes' ) + strlen( 'themes' ) );
+
+				$view_override_location = $override_folder . '/' . $view_name ;
+
+				$text = sprintf( __( 'version %s is out of date. The core version is %s', 'tribe-common' ), $version, $current_version );
+
+				$report .= '<li>' . $view_override_location . ' - '. $text . '</li>';
+
+			}
+
+			$report .= '<ul>';
+
+			$systeminfo[ 'Template(s) Issues' ] = $report;
+
+		}
+
+		return $systeminfo;
 	}
 
 	/**
@@ -119,7 +167,7 @@ class Tribe__Support__Template_Checker {
 	 * @param  string $template_filepath
 	 * @return string
 	 */
-	protected function get_template_version( $template_filepath ) {
+	public function get_template_version( $template_filepath ) {
 		if ( ! is_file( $template_filepath ) || ! is_readable( $template_filepath ) ) {
 			return '';
 		}

@@ -63,7 +63,6 @@ class Tribe__Support__Template_Checker_Report {
 	 * @param array  $template_system
 	 */
 	protected static function generate_for( $plugin_name, array $template_system ) {
-		$report = '<dt>' . esc_html( $plugin_name ) . '</dt>';
 
 		$scanner = new Tribe__Support__Template_Checker(
 			$template_system[ self::VERSION_INDEX ],
@@ -74,33 +73,64 @@ class Tribe__Support__Template_Checker_Report {
 		$newly_introduced_or_updated = $scanner->get_views_tagged_this_release();
 		$outdated_or_unknown = $scanner->get_outdated_overrides( true );
 
+		$report = '<table class="tribe-template-status">';
+
+		$report .= '<thead>';
+		$report .= '<tr class="table-heading">';
+		$report .= '<th colspan="4">' . esc_html( $plugin_name ) . '</th>';
+		$report .= '</tr>';
+		$report .= '</thead>';
+
+		$report .= '<tbody>';
+
 		if ( empty( $newly_introduced_or_updated ) && empty( $outdated_or_unknown ) ) {
-			$report .= '<dd>' . __( 'No notable changes detected', 'tribe-common' ) . '</dd>';
+			$report .= '<tr><td>' . __( 'No notable changes detected', 'tribe-common' ) . '</td></td>';
 		}
 
 		if ( ! empty( $newly_introduced_or_updated ) ) {
-			$report .= '<dd><p>' . sprintf( __( 'Templates introduced or updated with this release (%s):', 'tribe-common' ), $template_system[ self::VERSION_INDEX ] ) . '</p><ul>';
+			$report .= '<tr><td><p>' . sprintf( __( 'Templates introduced or updated with this release (%s):', 'tribe-common' ), $template_system[ self::VERSION_INDEX ] ) . '</p></td>';
+
+			$report .= '<td><ul>';
 
 			foreach ( $newly_introduced_or_updated as $view_name => $version ) {
 				$report .= '<li>' . esc_html( $view_name ) . '</li>';
 			}
 
-			$report .= '</ul></dd>';
+			$report .= '</ul></td></tr>';
 		}
 
 		if ( ! empty( $outdated_or_unknown ) ) {
-			$report .= '<dd><p>' . __( 'Existing theme overrides that may need revision:', 'tribe-common' ) . '</p><ul>';
+			$report .= '<tr><td colspan="4"><p>' . __( 'Existing theme overrides that may need revision:', 'tribe-common' ) . '</p></td></tr>';
+
+			$report .= '<tr><td class="label">Overrides</td>';
+			$report .= '<td>';
+			$report .= '<ul>';
 
 			foreach ( $outdated_or_unknown as $view_name => $version ) {
 				$version_note = empty( $version )
 					? __( 'version data missing from override', 'tribe-common' )
 					: sprintf( __( 'based on %s version', 'tribe-common' ), $version );
 
-				$report .= '<li>' . esc_html( $view_name ) . ' (' . $version_note . ') </li>';
+				$current_version = $scanner->get_template_version( $template_system[ self::INCLUDED_VIEWS_INDEX ] . '/' . $view_name );
+
+				$override_folder = substr( $template_system[ self::THEME_OVERRIDES_INDEX ], strpos( $template_system[ self::THEME_OVERRIDES_INDEX ], 'themes' ) + strlen( 'themes' ) );
+
+				$view_override_location = $override_folder . '/' . $view_name ;
+
+				$text = sprintf( __( 'version <span class="error"><strong>%s</strong></span> is out of date. The core version is <strong>%s</strong>', 'tribe-common' ), $version, $current_version );
+
+				$report .= '<li><code>' . $view_override_location . '</code>' . $text . '</li>';
 			}
 
-			$report .= '</ul></dd>';
+			$report .= '</ul></dd></td></tr>';
+
+			$report .= '<tr><td class="label">' . __( 'Outdated Templates', 'tribe-common' ) . '</td><td>';
+			$report .= '<mark class="error"><span class="dashicons dashicons-warning"></span></mark> <a href="https://m.tri.be/outdated-templates" target="_blank">';
+			$report .= __( 'Learn how to update', 'tribe-common' );
+			$report .= '</a></td></tr>';
 		}
+
+		$report .= '</tbody></table>';
 
 		self::$plugin_reports[ $plugin_name ] = $report;
 	}
@@ -113,7 +143,7 @@ class Tribe__Support__Template_Checker_Report {
 			self::$complete_report = '<p>' . __( 'No notable template changes detected.', 'tribe-common' ) . '</p>';
 		} else {
 			self::$complete_report = '<p>' . __( 'Information about recent template changes and potentially impacted template overrides is provided below.', 'tribe-common' ) . '</p>'
-				. '<div class="template-updates-wrapper">' . join( ' ', self::$plugin_reports ) . '</div>';
+				. '<div>' . join( ' ', self::$plugin_reports ) . '</div>';
 		}
 	}
 }

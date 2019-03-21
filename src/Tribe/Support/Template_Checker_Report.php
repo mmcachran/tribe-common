@@ -122,7 +122,7 @@ class Tribe__Support__Template_Checker_Report {
 				$report .= '<li><code>' . $view_override_location . '</code>' . $text . '</li>';
 			}
 
-			$report .= '</ul></dd></td></tr>';
+			$report .= '</ul></td></tr>';
 
 			$report .= '<tr><td class="label">' . __( 'Outdated Templates', 'tribe-common' ) . '</td><td>';
 			$report .= '<mark class="error"><span class="dashicons dashicons-warning"></span></mark> <a href="https://m.tri.be/outdated-templates" target="_blank">';
